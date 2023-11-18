@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View, CreateView
-from constants import API_KEY
+from .constants import API_KEY
 import googlemaps
 import requests
 
@@ -8,7 +8,6 @@ gmaps = googlemaps.Client(key=API_KEY)
 
 lant = gmaps.geolocate(home_mobile_country_code=+880)['location']['lat']
 long = gmaps.geolocate(home_mobile_country_code=+880)['location']['lng']
-help(gmaps)
 direction_matrix = gmaps.distance_matrix(origins='Dhaka', destinations='Chittagong', mode='driving')
 
 re = requests.post('https://www.googleapis.com/geolocation/v1/geolocate?key='+API_KEY)
