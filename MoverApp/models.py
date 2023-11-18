@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .constants import ACCOUNT_TYPE, PERSON_STATUS
 
 class PersonModel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='main_user')
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
