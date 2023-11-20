@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView
 from .constants import API_KEY
 import googlemaps
@@ -40,7 +40,27 @@ class GeolocationView(View):
 class DirectionView(View):
     def get(self, request):
         context = {}  
-        direction = gmaps.distance_matrix(origins='Dhaka', destinations='Rajshahi', mode='driving')
-        context['direction'] = direction
         context['API_KEY'] = API_KEY 
         return render(request, 'direction.html', context)
+    
+class DistanceView(View):
+    def get(self, request):
+        context = {}
+        context['API_KEY'] = API_KEY
+        return render(request, 'distance.html', context)
+    
+    def post(self, request):
+        values = request.POST
+        print(values)
+        destination_address = request.POST.get('destination-address')
+        travel_mode = request.POST.get('travel-mode')
+        print(destination_address, travel_mode)
+        context = {}
+        context['API_KEY'] = API_KEY
+        return render(request, 'distance.html', context)
+    
+class DemoView(View):
+    def get(self, request):
+        context = {}
+        context['API_KEY'] = API_KEY
+        return render(request, 'demo.html', context)
