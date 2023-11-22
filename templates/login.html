@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags%}
+{% block content%}
+{% if Error %}
+<h2 class=" bg-white text-danger text-center mt-5" >{{Error}}</h2>
+{% endif %}
+<div class="container mt-5 mb-5 pb-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 login-container">
+            <h2 class="text-center">Login</h2>
+            <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter your username" name='username'>
+                {% if form.username.errors %}{% for error in form.username.errors %} 
+                <p class="text-danger">* {{ error }}</p> 
+                {% endfor %}{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter your password" name='password' >
+                {% if form.password.errors %}{% for error in form.password.errors %} 
+                <p class="text-danger">* {{ error }}</p> 
+                {% endfor %}{% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+    </div>
+    </div>
+</div>
+{% endblock content%}
+
