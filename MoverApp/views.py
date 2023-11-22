@@ -8,13 +8,13 @@ from .constants import API_KEY
 import googlemaps
 import requests
 
-gmaps = googlemaps.Client(key=API_KEY)
+# gmaps = googlemaps.Client(key=API_KEY)
 
-lant = gmaps.geolocate(home_mobile_country_code=+880)['location']['lat']
-long = gmaps.geolocate(home_mobile_country_code=+880)['location']['lng']
-direction_matrix = gmaps.distance_matrix(origins='Dhaka', destinations='Chittagong', mode='driving')
+# lant = gmaps.geolocate(home_mobile_country_code=+880)['location']['lat']
+# long = gmaps.geolocate(home_mobile_country_code=+880)['location']['lng']
+# direction_matrix = gmaps.distance_matrix(origins='Dhaka', destinations='Chittagong', mode='driving')
 
-re = requests.post('https://www.googleapis.com/geolocation/v1/geolocate?key='+API_KEY)
+# re = requests.post('https://www.googleapis.com/geolocation/v1/geolocate?key='+API_KEY)
 
 class BaseLoginRequiredMixin(LoginRequiredMixin, View):
     login_url = '/login/'
@@ -23,33 +23,9 @@ class BaseLoginRequiredMixin(LoginRequiredMixin, View):
 class HomeView(View):
     def get(self, request):
         context = {}
-        print(gmaps.geolocate())
-        lant = gmaps.geolocate()['location']['lat']
-        long = gmaps.geolocate()['location']['lng']
-        context['lant'] = lant
-        context['long'] = long
         context['API_KEY'] = API_KEY
         return render(request, 'base.html', context)
-    
-class GeolocationView(View):
-    def get(self, request):
-        context = {}
-        lant = gmaps.geolocate(home_mobile_country_code=+880)['location']['lat']
-        long = gmaps.geolocate(home_mobile_country_code=+880)['location']['lng']
-        context['lant'] = lant
-        context['long'] = long
-        context['API_KEY'] = API_KEY
-        return render(request, 'geolocation.html', context)
-    
-    def post(self, request):
-        pass
 
-class DirectionView(View):
-    def get(self, request):
-        context = {}  
-        context['API_KEY'] = API_KEY 
-        return render(request, 'direction.html', context)
-    
 class DistanceView(View):
     def get(self, request):
         context = {}
@@ -65,17 +41,11 @@ class DistanceView(View):
         context = {}
         context['API_KEY'] = API_KEY
         return render(request, 'distance.html', context)
-    
-class DemoView(View):
-    def get(self, request):
-        context = {}
-        context['API_KEY'] = API_KEY
-        return render(request, 'demo.html', context)
-    
 
 class SignUpView(CreateView):
     template_name = 'signup.html'
     form_class = SignUpForm
+    success_url = '/login/'
     
 class LogInView(LoginView):
     template_name = 'login.html'

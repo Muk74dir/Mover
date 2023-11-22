@@ -1,0 +1,21 @@
+body {
+  height: 100%;
+  background-color: rgb(222, 216, 216);
+
+}
+
+#map {
+  height: 50%;
+  width: 50%;
+  align-items: center;
+  border: 3px solid black;
+  margin-top: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 24rem;
+}
+
+footer {
+  margin-top: 5rem;
+}
