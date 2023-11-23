@@ -1,8 +1,24 @@
-<!-- Additional Information Form -->
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {{ address_formset.management_form }}
-  {{ address_formset.as_table }}
-  <button type="submit">Submit</button>
-</form>
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} <title> Additional Details </title> {% endblock title %}
+{% block integration %}
+{% endblock integration %}
+
+{% block content %}
+<div class="container mt-5 p-5">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+    {{ address_formset|crispy }}
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </div>
+  </form>
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+{% endblock scripts %}
+

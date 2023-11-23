@@ -1,7 +1,8 @@
 body{
     margin-bottom: 0% !important;
+    background-color: rgb(222, 216, 216);
 }
 
 footer{
-    background-color:rgb(26, 30, 29);
+    background-color:rgb(26, 30, 29) ;
 }
