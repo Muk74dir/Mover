@@ -15,4 +15,4 @@ class AddressAdmin(admin.ModelAdmin):
     list_filter = ('person', 'city', 'state', 'zipcode', 'country')
     
     def __str__(self):
-        return self.address_line
+        return self.person.username
