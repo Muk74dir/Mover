@@ -3,7 +3,9 @@ from django.views.generic import View, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import SignUpForm
+from .forms import SignUpForm, InfoForm, AddressForm, AddressInfoFormSet
+from .models import PersonModel
+from django.db import transaction
 from .constants import API_KEY
 import googlemaps
 import requests
@@ -46,6 +48,45 @@ class SignUpView(CreateView):
     template_name = 'signup.html'
     form_class = SignUpForm
     success_url = '/login/'
+    
+class AdditionalInfoView(CreateView):
+    template_name = 'additional_info.html'
+    model = PersonModel
+    form_class = InfoForm
+    success_url = '/distance/'
+    
+
+    def form_valid(self, form):
+        user_instance = self.request.user
+        
+        form.instance.user = user_instance
+        form.instance.username = self.request.user.username
+        form.instance.first_name = self.request.user.first_name
+        form.instance.last_name = self.request.user.last_name
+        form.instance.email = self.request.user.email
+        form.instance.status = 'Available'
+        form.instance.rating = None
+
+        with transaction.atomic():
+            response = super().form_valid(form)
+            
+            address_formset = AddressInfoFormSet(self.request.POST, instance=self.object)
+            if address_formset.is_valid():
+                address_formset.save()
+
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['address_formset'] = AddressInfoFormSet(self.request.POST, instance=self.object)
+        else:
+            context['address_formset'] = AddressInfoFormSet(instance=self.object) if self.object else AddressInfoFormSet()
+        return context
+        
+    
+    
+    
     
 class LogInView(LoginView):
     template_name = 'login.html'

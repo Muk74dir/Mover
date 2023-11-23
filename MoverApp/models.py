@@ -10,7 +10,7 @@ class PersonModel(models.Model):
     email = models.EmailField(max_length=254, unique=True)
     phone = models.CharField(max_length=15)
     dob = models.DateField()
-    
+
     image = models.ImageField(upload_to='profile_image/')
     status = models.CharField(max_length=10, choices=PERSON_STATUS)
     account_type = models.CharField(max_length=10, choices=ACCOUNT_TYPE)

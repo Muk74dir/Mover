@@ -1,0 +1,8 @@
+<!-- Additional Information Form -->
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {{ address_formset.management_form }}
+  {{ address_formset.as_table }}
+  <button type="submit">Submit</button>
+</form>
