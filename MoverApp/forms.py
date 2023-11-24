@@ -5,6 +5,30 @@ from .models import PersonModel, AddressModel
 from django import forms
 
 class SignUpForm(UserCreationForm):
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Username'}),
+        label='Username'
+    )
+    first_name = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter First Name'}),
+        label='First Name'
+    )
+    last_name = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Last Name'}),
+        label='Last Name'
+    )
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Email'}),
+        label='Email'
+    )
+    password1 = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Password'}),
+        label='Password'
+    )
+    password2 = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
+        label='Confirm Password'
+    )
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')

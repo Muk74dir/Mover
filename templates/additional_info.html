@@ -6,18 +6,22 @@
 {% endblock integration %}
 
 {% block content %}
-<div class="container mt-5 p-5">
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form|crispy }}
-    {{ address_formset|crispy }}
-    <div class="text-center">
-      <button type="submit" class="btn btn-primary mt-3">Submit</button>
-    </div>
-  </form>
-</div>
+<section class="section-content padding-y mb-5">
+  <div class="card mx-auto" style="max-width: 520px; margin-top: 40px">
+    <article class="card-body bg-dark">
+      <header class="mb-4"><h1 class="card-title text-center text-white">Additional Info</h1></header>
+      <form method="POST">
+      {% csrf_token %}
+      {{ form|crispy }}
+      {{ address_formset|crispy }}
+      <div class="text-center">
+        <button type="submit" class="btn btn-success mt-5">Save</button>
+      </div>
+      </form>
+    </article>
+  </div>
+</section>
 {% endblock content %}
-
 
 {% block scripts %}
 {% endblock scripts %}

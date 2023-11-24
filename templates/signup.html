@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block title %}
 <title>Signup</title>
@@ -9,62 +10,14 @@
 {% block content %}
 <section class="section-content padding-y">
   <div class="card mx-auto" style="max-width: 520px; margin-top: 40px">
-    <article class="card-body">
-      <header class="mb-4"><h1 class="card-title text-center">Sign up</h1></header>
+    <article class="card-body bg-dark">
+      <header class="mb-4"><h1 class="card-title text-center text-white">Sign up</h1></header>
       <form method="POST">
-        {% csrf_token %}
-        <div class="form-row">
-          <div class="col form-group mb-2">
-            <label for="username"><b>Username</b></label>
-            <input type="text" class="form-control" id="username" placeholder="Enter your username" name='username'>
-            {% if form.username.errors %}{% for error in form.username.errors %} 
-            <p class="text-danger">* {{ error }}</p> 
-            {% endfor %}{% endif %}
-          </div>
-          <div class="col form-group mb-2">
-            <label for="first_name"><b>First Name</b></label>
-            <input type="text" class="form-control" id="username" placeholder="Enter your first name" name='first_name'>
-            {% if form.username.errors %}{% for error in form.username.errors %} 
-            <p class="text-danger">* {{ error }}</p> 
-            {% endfor %}{% endif %}
-          </div>
-          <div class="col form-group mb-2">
-            <label for="last_name"><b>Last Name</b></label>
-            <input type="text" class="form-control" id="username" placeholder="Enter your last name" name='last_name'>
-            {% if form.username.errors %}{% for error in form.username.errors %} 
-            <p class="text-danger">* {{ error }}</p> 
-            {% endfor %}{% endif %}
-          </div>
-          
-
-        <div class="form-group mt-2">
-            <label for="email"><b>Email</b></label>
-            <input type="email" class="form-control" id="email" placeholder="Enter your email" name='email'>
-            {% if form.email.errors %}{% for error in form.email.errors %}<p class="text-danger">* {{ error }}</p> 
-            {% endfor %}{% endif %}
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-6 mt-2">
-                <label for="password1"><b>Create password</b></label>
-                <input class="form-control" type="password" name="password1" placeholder="Enter your password">
-            </div>
-            {% if form.password1.errors %}{% for error in form.password1.errors %} 
-            <p class="text-danger">* {{ error }}</p> 
-            {% endfor %}{% endif %}
-            
-            <div class="form-group col-md-6 mt-2">
-                <label for="password2"><b>Confirm password</b></label>
-                <input class="form-control" type="password" name="password2" placeholder="Repeat your password">
-            </div>
-            {% if form.password2.errors %}{% for error in form.password2.errors %} 
-            <p class="text-danger">* {{ error }}</p> 
-            {% endfor %}{% endif %}
-        </div>
-
-        <div class="form-group my-3 text-center">
-          <button type="submit" class="btn btn-primary btn-block">Signup</button>
-        </div>
+      {% csrf_token %}
+      {{form | crispy}}
+      <div class="text-center mt-3">
+        <button type="submit" class="btn btn-success mt-3">Create Account</button>
+      </div>
       </form>
     </article>
   </div>
