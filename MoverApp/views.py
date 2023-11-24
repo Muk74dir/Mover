@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import SignUpForm, InfoForm, AddressForm, AddressInfoFormSet
+from django.contrib.auth import get_user_model
 from .models import PersonModel
 from django.db import transaction
 from .constants import API_KEY
@@ -22,13 +23,13 @@ class BaseLoginRequiredMixin(LoginRequiredMixin, View):
     login_url = '/login/'
 
 
-class HomeView(View):
+class HomeView(BaseLoginRequiredMixin, View):
     def get(self, request):
         context = {}
         context['API_KEY'] = API_KEY
         return render(request, 'base.html', context)
 
-class DistanceView(View):
+class DistanceView(BaseLoginRequiredMixin, View):
     def get(self, request):
         context = {}
         context['API_KEY'] = API_KEY
@@ -49,21 +50,28 @@ class SignUpView(CreateView):
     form_class = SignUpForm
     success_url = '/login/'
     
-class AdditionalInfoView(CreateView):
+class AdditionalInfoView(BaseLoginRequiredMixin, CreateView):
     template_name = 'additional_info.html'
     model = PersonModel
     form_class = InfoForm
-    success_url = '/distance/'
+    success_url = '/""/'
+    
+    def get(self, request):
+        if PersonModel.objects.filter(user=request.user).exists():
+            return redirect('homepage')
+        else:
+            return super().get(request)
     
 
     def form_valid(self, form):
-        user_instance = self.request.user
+        user_instance = get_user_model().objects.get(pk=self.request.user.pk)
+        print(user_instance)
         
         form.instance.user = user_instance
-        form.instance.username = self.request.user.username
-        form.instance.first_name = self.request.user.first_name
-        form.instance.last_name = self.request.user.last_name
-        form.instance.email = self.request.user.email
+        form.instance.username = user_instance.username
+        form.instance.first_name = user_instance.first_name
+        form.instance.last_name = user_instance.last_name
+        form.instance.email = user_instance.email
         form.instance.status = 'Available'
         form.instance.rating = None
 
@@ -91,16 +99,19 @@ class AdditionalInfoView(CreateView):
 class LogInView(LoginView):
     template_name = 'login.html'
     
+    
     def post(self, request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        
+        context = {}
         if user:
             login(request, user)
-            return redirect('homepage')
+            return redirect('additional_info')
         else:
-            return render(request, self.template_name, {'Error': 'Invalid Username or Password'})
+            context['form'] = self.form_class(self.request.POST)
+            context['Error'] = 'Invalid Username or Password'
+            return render(request, self.template_name, context)
         
 
 class LogOutView(BaseLoginRequiredMixin, LogoutView):
