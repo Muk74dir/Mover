@@ -55,4 +55,19 @@ class AddressForm(forms.ModelForm):
 
 AddressInfoFormSet = forms.inlineformset_factory(PersonModel, AddressModel, form=AddressForm, extra=1, can_delete=False)
 
-
+class PersonModelForm(forms.ModelForm):
+    image = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control'}))
+    dob = forms.DateField(
+        widget=forms.SelectDateWidget(years=range(1900, 2023), 
+        attrs={'style': 'width: 33%; display: inline-block;', 'class': 'form-control'}),
+        label='Date of Birth',
+    )
+    class Meta:
+        model = PersonModel
+        fields = ['image', 'first_name', 'last_name', 'email', 'phone', 'dob']
+        
+class AddressModelForm(forms.ModelForm):
+    class Meta:
+        model = AddressModel
+        fields = ['address_line', 'city', 'state', 'zipcode', 'country']
+    
