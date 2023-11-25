@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import SignUpForm, InfoForm, AddressForm, AddressInfoFormSet
@@ -128,3 +128,11 @@ class ProfileView(BaseLoginRequiredMixin, View):
         context['person'] = get_person
         context['address'] = get_person_address
         return render(request, 'profile.html', context)
+
+class EditProfile(BaseLoginRequiredMixin, View):
+    def get(self, request, id):
+        pass
+    
+class ChangePasswordView(BaseLoginRequiredMixin, PasswordChangeView):
+    template_name = 'change_password.html'
+    success_url = '/profile/'
