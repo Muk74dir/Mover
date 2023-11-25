@@ -7,7 +7,7 @@ class PersonModel(models.Model):
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
-    email = models.EmailField(max_length=254, unique=True)
+    email = models.EmailField(max_length=254)
     phone = models.CharField(max_length=15)
     dob = models.DateField()
 
@@ -18,6 +18,9 @@ class PersonModel(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     
+    def __str__(self):
+        return self.username
+    
 
 class VehicleModel(models.Model):
     driver = models.ForeignKey(PersonModel, on_delete=models.CASCADE, related_name='vehicle_owner')
@@ -25,6 +28,20 @@ class VehicleModel(models.Model):
     type = models.CharField(max_length=20)
     model = models.CharField(max_length=20)
     license_no = models.CharField(max_length=20)
+    color = models.CharField(max_length=20)
+    
+class BikeModel(models.Model):
+    vehicle = models.ForeignKey(VehicleModel, on_delete=models.CASCADE)
+    wheel = models.IntegerField()
+    avg_speed = models.IntegerField()
+    capacity = models.IntegerField()
+    
+class CarModel(models.Model):
+    vehicle = models.ForeignKey(VehicleModel, on_delete=models.CASCADE)
+    wheel = models.IntegerField()
+    avg_speed = models.IntegerField()
+    capacity = models.IntegerField()
+    
     
     
 class AddressModel(models.Model):

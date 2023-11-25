@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import SignUpForm, InfoForm, AddressForm, AddressInfoFormSet
 from django.contrib.auth import get_user_model
-from .models import PersonModel
+from .models import PersonModel, AddressModel
 from django.db import transaction
 from .constants import API_KEY
 import googlemaps
@@ -54,7 +54,7 @@ class AdditionalInfoView(BaseLoginRequiredMixin, CreateView):
     template_name = 'additional_info.html'
     model = PersonModel
     form_class = InfoForm
-    success_url = '/""/'
+    success_url = '/home/'
     
     def get(self, request):
         if PersonModel.objects.filter(user=request.user).exists():
@@ -118,3 +118,13 @@ class LogOutView(BaseLoginRequiredMixin, LogoutView):
     def get(self, request):
         logout(request)
         return redirect('homepage')
+    
+
+class ProfileView(BaseLoginRequiredMixin, View):
+    def get(self, request):
+        get_person = PersonModel.objects.get(user=request.user)
+        get_person_address = AddressModel.objects.get(person=get_person)
+        context = {}
+        context['person'] = get_person
+        context['address'] = get_person_address
+        return render(request, 'profile.html', context)
