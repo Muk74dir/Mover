@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}Profile{% endblock title %}
+{% block integration %}
+{% endblock integration %}
+
 {% block content %}
 <section style="background-color: #eee;">
     <div class="container py-5">
@@ -82,7 +86,7 @@
             <div class="">
                 <p class="mt-4 text-center d-flex justify-content-center">
                     <a class="btn btn-info mx-4" href="{% url "edit_profile" %}">Edit Profile</a>
-                    <a class="btn btn-secondary mx-4" href="{% url "edit_address" %}">Change Address</a>
+                    <a class="btn btn-secondary mx-4" href="{% url "edit_address" %}">Edit Address</a>
                     <a class="btn btn-warning mx-4" href="{% url "change_password" %}">Change Password</a>
                 </p>
             </div>
@@ -92,3 +96,6 @@
     </div>
   </section>
 {% endblock content%}
+
+{% block scripts %}
+{% endblock scripts %}

@@ -40,10 +40,8 @@ class DistanceView(BaseLoginRequiredMixin, View):
     
     def post(self, request):
         values = request.POST
-        print(values)
         destination_address = request.POST.get('destination-address')
         travel_mode = request.POST.get('travel-mode')
-        print(destination_address, travel_mode)
         context = {}
         context['API_KEY'] = API_KEY
         return render(request, 'distance.html', context)
@@ -68,7 +66,6 @@ class AdditionalInfoView(BaseLoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         user_instance = get_user_model().objects.get(pk=self.request.user.pk)
-        print(user_instance)
         
         form.instance.user = user_instance
         form.instance.username = user_instance.username
@@ -170,5 +167,17 @@ class EditAddressView(BaseLoginRequiredMixin, UpdateView):
     
     
 class ChangePasswordView(BaseLoginRequiredMixin, PasswordChangeView):
-    template_name = 'change_password.html'
-    success_url = '/profile/'
+    template_name = 'edit_profile.html'
+    Model = PersonModel
+    success_url = reverse_lazy('profile')
+    
+    def get_object(self, queryset=None):
+        return get_object_or_404(PersonModel, user=self.request.user)
+    
+    def get_context_data(self, **kwargs: Any) -> Any:
+        context = {}
+        context['title'] = 'Change Password'
+        context['button'] = 'Change'
+        context['form'] = self.form_class(self.request.user)
+        return context
+    
