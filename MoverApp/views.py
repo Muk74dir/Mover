@@ -1,14 +1,15 @@
 from typing import Any, Dict, Optional
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import View, CreateView, FormView, UpdateView
+from django.views.generic import View, CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import SignUpForm, InfoForm, AddressInfoFormSet, PersonModelForm, AddressModelForm
 from django.contrib.auth import get_user_model
 from .models import PersonModel, AddressModel
-from django.db import models, transaction
+from django.contrib.auth.models import User
+from django.db import transaction
 from django.core.files import File
 from .constants import API_KEY
 import googlemaps
@@ -21,6 +22,9 @@ import requests
 # direction_matrix = gmaps.distance_matrix(origins='Dhaka', destinations='Chittagong', mode='driving')
 
 # re = requests.post('https://www.googleapis.com/geolocation/v1/geolocate?key='+API_KEY)
+
+
+
 
 class BaseLoginRequiredMixin(LoginRequiredMixin, View):
     login_url = '/login/'
@@ -128,7 +132,7 @@ class ProfileView(BaseLoginRequiredMixin, View):
         context['person'] = get_person
         context['address'] = get_person_address
         return render(request, 'profile.html', context)
-
+    
 class EditPersonView(BaseLoginRequiredMixin, UpdateView):
     template_name = 'edit_profile.html'
     model = PersonModel
@@ -161,11 +165,7 @@ class EditAddressView(BaseLoginRequiredMixin, UpdateView):
         context['form'] = self.form_class(instance=self.get_object())
         return context
     
-    
-    
-
-    
-    
+ 
 class ChangePasswordView(BaseLoginRequiredMixin, PasswordChangeView):
     template_name = 'edit_profile.html'
     Model = PersonModel
@@ -181,3 +181,20 @@ class ChangePasswordView(BaseLoginRequiredMixin, PasswordChangeView):
         context['form'] = self.form_class(self.request.user)
         return context
     
+class DeleteProfileView(BaseLoginRequiredMixin, DeleteView):
+    template_name = 'edit_profile.html'
+    model = PersonModel
+    success_url = '/logout/'
+    
+    def get_object(self, queryset=None):
+        return get_object_or_404(PersonModel, user=self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        context = {}
+        context['title'] = 'Are you sure you want to delete your profile?'
+        context['button'] = 'Delete'
+        person = self.get_object()
+        PersonModel.objects.get(user=self.request.user).delete()
+        User.objects.get(pk=self.request.user.pk).delete()
+        return context
+
