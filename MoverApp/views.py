@@ -5,9 +5,9 @@ from django.views.generic import View, CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import SignUpForm, InfoForm, AddressInfoFormSet, PersonModelForm, AddressModelForm
+from .forms import SignUpForm, InfoForm, AddressInfoFormSet, PersonModelForm, AddressModelForm, DirectionForm
 from django.contrib.auth import get_user_model
-from .models import PersonModel, AddressModel
+from .models import PersonModel, AddressModel, TripModel
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.core.files import File
@@ -15,13 +15,13 @@ from .constants import API_KEY
 import googlemaps
 import requests
 
-# gmaps = googlemaps.Client(key=API_KEY)
+gmaps = googlemaps.Client(key=API_KEY)
 
-# lant = gmaps.geolocate(home_mobile_country_code=+880)['location']['lat']
-# long = gmaps.geolocate(home_mobile_country_code=+880)['location']['lng']
-# direction_matrix = gmaps.distance_matrix(origins='Dhaka', destinations='Chittagong', mode='driving')
+lant = gmaps.geolocate(home_mobile_country_code=+880)['location']['lat']
+long = gmaps.geolocate(home_mobile_country_code=+880)['location']['lng']
+direction_matrix = gmaps.distance_matrix(origins='Dhaka', destinations='Chittagong', mode='driving')
 
-# re = requests.post('https://www.googleapis.com/geolocation/v1/geolocate?key='+API_KEY)
+re = requests.post('https://www.googleapis.com/geolocation/v1/geolocate?key='+API_KEY)
 
 
 
@@ -197,4 +197,9 @@ class DeleteProfileView(BaseLoginRequiredMixin, DeleteView):
         PersonModel.objects.get(user=self.request.user).delete()
         User.objects.get(pk=self.request.user.pk).delete()
         return context
-
+    
+class DemoView(BaseLoginRequiredMixin, View):
+    def get(self, request):
+        context = {}
+        context['form'] = DirectionForm()
+        return render(request, 'demo.html', context)

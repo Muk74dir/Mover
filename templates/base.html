@@ -28,6 +28,7 @@
               </div>
               <div class="navbar-nav ml-auto">
                   {% if user.is_authenticated %}
+                  <a class="nav-link text-white" href=" {% url "distance" %} ">Distance</a>
                   <a class="nav-link text-white" href=" {% url "profile" %} ">Profile</a>
                   <a class="nav-link text-white" href=" {% url "logout" %} ">Logout</a>
                   {% else %}

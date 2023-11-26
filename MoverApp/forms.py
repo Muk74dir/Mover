@@ -1,7 +1,7 @@
 from typing import Any
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import PersonModel, AddressModel
+from .models import PersonModel, AddressModel, TripModel
 from django import forms
 
 class SignUpForm(UserCreationForm):
@@ -70,4 +70,23 @@ class AddressModelForm(forms.ModelForm):
     class Meta:
         model = AddressModel
         fields = ['address_line', 'city', 'state', 'zipcode', 'country']
-    
+        
+        
+class DirectionForm(forms.ModelForm):
+    origin = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'placeholder': 'From',
+               'id': 'origin',
+               'type': 'text',}),
+        label='Origin'
+    )
+    destination = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control',
+               'placeholder': 'To',
+               'id': 'destination',
+               'type': 'text',}),
+        label='Destination'
+    )
+    class Meta:
+        model = TripModel
+        fields = ['origin', 'destination']
