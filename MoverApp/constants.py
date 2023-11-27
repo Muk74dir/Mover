@@ -10,3 +10,8 @@ PERSON_STATUS = (
     ('Busy', 'Busy'),
     ('Available', 'Available')
 )
+
+VEHICLE_TYPE = (
+    ('BIKE', 'BIKE'),
+    ('CAR', 'CAR')
+)

@@ -7,39 +7,42 @@
 {% endblock integration %}
 
 {% block content %}
-<form action="">
-    {% csrf_token %}
-    <div class="justify-content-center">
-        <div class="col-5">
-            {{ form|crispy }}
+<section class="section-content padding-y">
+    <div class="card mx-auto" style="max-width: 520px; margin-top: 40px">
+      <article class="card-body bg-dark">
+        <header class="mb-4"><h1 class="card-title text-center text-white">{{title}}</h1></header>
+        <form method="POST">
+        {% csrf_token %}
+        {{form | crispy}}
+        <div class="text-center mt-3">
+          <button type="submit" class="btn btn-success mt-3">{{button}}</button>
         </div>
+        </form>
+      </article>
     </div>
-</form>
+  </section>
 {% endblock content %}
 
 {% block scripts %}
 <script>
-let autocomplete1;
-function initOrigin(){
-    autocomplete1 = new google.maps.places.Autocomplete(
-        document.getElementById('origin'),
-        {
-            types: ['establishment'],
-            componentRestrictions: {country: 'bangladesh'},
-            fields: ['place_id', 'geometry', 'name']
+    function initialize() {
+
+        var acInputs = document.getElementsByClassName("autocomplete");
+        console.log(acInputs);
+    
+        for (var i = 0; i < acInputs.length; i++) {
+    
+            var autocomplete = new google.maps.places.Autocomplete(acInputs[i]);
+            autocomplete.inputId = acInputs[i].id;
+    
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                document.getElementById("log").innerHTML = 'You used input with id ' + this.inputId;
+            });
         }
-    );
-}
-let autocomplete2;
-function initDestination(){
-    autocomplete2 = new google.maps.places.Autocomplete(
-        document.getElementById('destination'),
-        {
-            types: ['establishment'],
-            fields: ['place_id', 'geometry', 'name']
-        }
-    );
-}
+    }
+    
+    initialize();
+
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByE9mZ7gZGC3IFafFyonZ3CMeyXBls26M&libraries=places&callback=initOrigin&callback=initDestination" async defer> </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByE9mZ7gZGC3IFafFyonZ3CMeyXBls26M&libraries=places&callback=initialize" async defer> </script>
 {% endblock scripts %}

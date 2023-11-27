@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% csrf_token %}
+    <h1>From : {{origin}}</h1>
+    <h2>To : {{destination}} </h2>
+    <h3>Traveling by : {{travel_mode}}</h3>
+    <h4>Distance : {{distance}} </h4>
+    <h5>Duration : {{duration}}</h5>
+</body>
+</html>

@@ -2,7 +2,9 @@ from typing import Any
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import PersonModel, AddressModel, TripModel
+from .constants import ACCOUNT_TYPE, PERSON_STATUS, VEHICLE_TYPE
 from django import forms
+
 
 class SignUpForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(
@@ -74,19 +76,26 @@ class AddressModelForm(forms.ModelForm):
         
 class DirectionForm(forms.ModelForm):
     origin = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control',
+        attrs={'class': 'form-control autocomplete',
                'placeholder': 'From',
                'id': 'origin',
                'type': 'text',}),
         label='Origin'
     )
     destination = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control',
+        attrs={'class': 'form-control autocomplete',
                'placeholder': 'To',
                'id': 'destination',
                'type': 'text',}),
         label='Destination'
     )
+    travel_mode = forms.ChoiceField(choices=VEHICLE_TYPE, widget=forms.Select(
+        attrs={'class': 'form-control',
+               'id': 'vehicle_type',
+               'type': 'text',
+            }),
+        label='Travel Mode'
+    )
     class Meta:
         model = TripModel
-        fields = ['origin', 'destination']
+        fields = ['origin', 'destination', 'travel_mode']
