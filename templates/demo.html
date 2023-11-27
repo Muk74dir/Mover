@@ -3,6 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block integration %}
+<script src="{% static "js/prettier.js" %} "></script>
 {% endblock integration %}
 
 {% block content %}
@@ -68,7 +69,16 @@
       this.setOptions({scrollwheel:true});
     });
     directionServices = new google.maps.DirectionsService();
-    directionDisplay = new google.maps.DirectionsRenderer();
+    directionDisplay = new google.maps.DirectionsRenderer(
+      polilineOptions = {
+        strokeOpacity: 5.0,
+        strokeWeight: 20,
+      },
+      suppressMarkers = true,
+      suppressInfoWindows = true,
+      preserveViewport = true,
+      fillOpacity = 0.0,
+    );
     directionDisplay.setMap(map);
 
     var acInputs = document.getElementsByClassName("autocomplete");
