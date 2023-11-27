@@ -205,21 +205,5 @@ class DemoView(BaseLoginRequiredMixin, View):
         context['title'] = 'Set Direction and Vehicle'
         context['button'] = 'Set'
         return render(request, 'demo.html', context)
-    
-    def post(self, request):
-        context = {}
-        origin = request.POST.get('origin')
-        destination = request.POST.get('destination')
-        travel_mode = request.POST.get('travel_mode')
-        if travel_mode == 'CAR':
-            direction_matrix = gmaps.distance_matrix(origins=origin, destinations=destination, mode='driving')
-        else:
-            direction_matrix = gmaps.distance_matrix(origins=origin, destinations=destination, mode='bicycling')
-        context['origin'] = direction_matrix['origin_addresses'][0]
-        context['destination'] = direction_matrix['destination_addresses'][0]
-        context['travel_mode'] = travel_mode
-        context['distance'] = direction_matrix['rows'][0]['elements'][0]['distance']['text']
-        context['duration'] = direction_matrix['rows'][0]['elements'][0]['duration']['text']
-        return render(request, 'show_demo.html', context)
         
         

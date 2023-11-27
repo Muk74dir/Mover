@@ -3,24 +3,33 @@
 {% load crispy_forms_tags %}
 
 {% block integration %}
-
 {% endblock integration %}
 
 {% block content %}
-<section class="section-content padding-y">
-    <div class="card mx-auto" style="max-width: 520px; margin-top: 40px">
-      <article class="card-body bg-dark">
-        <header class="mb-4"><h1 class="card-title text-center text-white">{{title}}</h1></header>
-        <form method="POST">
-        {% csrf_token %}
-        {{form | crispy}}
-        <div class="text-center mt-3">
-          <button type="submit" class="btn btn-success mt-3">{{button}}</button>
-        </div>
-        </form>
-      </article>
-    </div>
-  </section>
+<section class="section-content py-5 ">
+  <div class="container">
+      <div class="row justify-content-around">
+          <div class="col-md-6 mb-3">
+              <div class="card bg-dark text-white">
+                  <div class="card-body">
+                      <h1 class="card-title text-center">{{title}}</h1>
+                      <form method="POST">
+                          {% csrf_token %}
+                          {{form | crispy}}
+                      </form>
+                      <div class="text-center mt-5">
+                        <button onclick="calcRoute()" type="submit" class="btn btn-success">{{button}}</button>
+                    </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-6">
+              <div onload="initMap()" id="map" class="card" style="height: 400px;"></div>
+          </div>
+      </div>
+  </div>
+</section>
+
 {% endblock content %}
 
 {% block scripts %}
@@ -28,11 +37,14 @@
     function initialize() {
 
         var acInputs = document.getElementsByClassName("autocomplete");
-        console.log(acInputs);
-    
         for (var i = 0; i < acInputs.length; i++) {
     
-            var autocomplete = new google.maps.places.Autocomplete(acInputs[i]);
+            var autocomplete = new google.maps.places.Autocomplete(acInputs[i],
+            {
+              types: ['geocode'],
+              componentRestrictions: { 'country': ['BD'] },
+              fields: ['place_id', 'geometry', 'name', 'formatted_address'] 
+            });
             autocomplete.inputId = acInputs[i].id;
     
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
@@ -40,9 +52,51 @@
             });
         }
     }
-    
     initialize();
 
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByE9mZ7gZGC3IFafFyonZ3CMeyXBls26M&libraries=places&callback=initialize" async defer> </script>
+
+<script>
+  let map, directionServices, directionDisplay;
+
+  function initMap(){
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 0, lng: 0},
+      zoom: 18,
+    });
+    google.maps.event.addListener(map, 'click', function(event) {
+      this.setOptions({scrollwheel:true});
+    });
+    directionServices = new google.maps.DirectionsService();
+    directionDisplay = new google.maps.DirectionsRenderer();
+    directionDisplay.setMap(map);
+
+    var acInputs = document.getElementsByClassName("autocomplete");
+        for (var i = 0; i < acInputs.length; i++) {
+            var autocomplete = new google.maps.places.Autocomplete(acInputs[i]);
+            autocomplete.inputId = acInputs[i].id;
+    
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                document.getElementById("log").innerHTML = 'You used input with id ' + this.inputId;
+            });
+        }
+  }
+
+  function calcRoute(){
+    var start = document.getElementById('origin').value;
+    var end = document.getElementById('destination').value;
+    var request = {
+      origin: start,
+      destination: end,
+      travelMode: 'DRIVING'
+    };
+    directionServices.route(request, function(result, status){
+      if(status == 'OK'){
+        directionDisplay.setDirections(result);
+      }
+    });
+  }
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByE9mZ7gZGC3IFafFyonZ3CMeyXBls26M&libraries=places&callback=initMap"></script>
 {% endblock scripts %}
