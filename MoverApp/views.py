@@ -39,16 +39,13 @@ class HomeView(BaseLoginRequiredMixin, View):
 class DistanceView(BaseLoginRequiredMixin, View):
     def get(self, request):
         context = {}
-        context['API_KEY'] = API_KEY
+        context['form'] = DirectionForm()
+        context['title'] = 'Set Direction and Vehicle'
+        context['button'] = 'Set'
         return render(request, 'distance.html', context)
-    
+
     def post(self, request):
-        values = request.POST
-        destination_address = request.POST.get('destination-address')
-        travel_mode = request.POST.get('travel-mode')
-        context = {}
-        context['API_KEY'] = API_KEY
-        return render(request, 'distance.html', context)
+        pass
 
 class SignUpView(CreateView):
     template_name = 'signup.html'
@@ -197,13 +194,5 @@ class DeleteProfileView(BaseLoginRequiredMixin, DeleteView):
         PersonModel.objects.get(user=self.request.user).delete()
         User.objects.get(pk=self.request.user.pk).delete()
         return context
-    
-class DemoView(BaseLoginRequiredMixin, View):
-    def get(self, request):
-        context = {}
-        context['form'] = DirectionForm()
-        context['title'] = 'Set Direction and Vehicle'
-        context['button'] = 'Set'
-        return render(request, 'demo.html', context)
         
         
