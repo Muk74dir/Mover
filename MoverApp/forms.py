@@ -1,7 +1,7 @@
 from typing import Any
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import PersonModel, AddressModel, TripModel
+from .models import PersonModel, AddressModel, TripModel, VehicleModel
 from .constants import ACCOUNT_TYPE, PERSON_STATUS, VEHICLE_TYPE
 from django import forms
 
@@ -99,3 +99,36 @@ class DirectionForm(forms.ModelForm):
     class Meta:
         model = TripModel
         fields = ['origin', 'destination', 'travel_mode']
+        
+        
+class VehicleRegistrationForm(forms.ModelForm):
+    image = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control'}))
+    type = forms.ChoiceField(choices=VEHICLE_TYPE, widget=forms.Select(attrs={'class': 'form-control'}),
+    )
+    model = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Model'}),
+        label='Model'
+    )
+    license_no = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter License Number'}))
+    color = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Color'}))
+    
+    wheel = forms.IntegerField(widget=forms.NumberInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Number of Wheels'}),
+        label='Number of Wheels'
+    )
+    avg_speed = forms.FloatField(widget=forms.NumberInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Average Speed'}),
+        label='Average Speed'
+    )
+    capacity = forms.IntegerField(widget=forms.NumberInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Capacity'}),
+        label='Capacity'
+    )
+    class Meta:
+        model = VehicleModel
+        fields = ['image', 'type', 'model', 'license_no', 'color', 'wheel', 'avg_speed', 'capacity']
+        
+class VehicleSearchFrom(forms.Form):
+    search = forms.CharField(label='Search', required=False)

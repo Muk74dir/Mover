@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PersonModel,AddressModel
+from .models import PersonModel, AddressModel, VehicleModel, TripRequestModel, TripModel
 
 @admin.register(PersonModel)
 class PersonAdmin(admin.ModelAdmin):
@@ -16,3 +16,11 @@ class AddressAdmin(admin.ModelAdmin):
     
     def __str__(self):
         return self.person.username
+    
+@admin.register(VehicleModel)
+class VehicleAdmin(admin.ModelAdmin):
+    list_display = ('driver', 'type', 'model', 'license_no', 'color')
+    list_filter = ('driver', 'type', 'model', 'license_no', 'color')
+    
+    def __str__(self):
+        return self.driver.username

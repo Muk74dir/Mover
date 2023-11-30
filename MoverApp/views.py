@@ -6,8 +6,9 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import SignUpForm, InfoForm, AddressInfoFormSet, PersonModelForm, AddressModelForm, DirectionForm
+from .forms import VehicleRegistrationForm, VehicleSearchFrom
 from django.contrib.auth import get_user_model
-from .models import PersonModel, AddressModel, TripModel
+from .models import PersonModel, AddressModel, VehicleModel
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.core.files import File
@@ -34,18 +35,30 @@ class HomeView(BaseLoginRequiredMixin, View):
     def get(self, request):
         context = {}
         context['API_KEY'] = API_KEY
+        person = PersonModel.objects.get(user=request.user)
+        context['person'] = person
         return render(request, 'base.html', context)
 
 class DistanceView(BaseLoginRequiredMixin, View):
+    context = {}
     def get(self, request):
-        context = {}
-        context['form'] = DirectionForm()
-        context['title'] = 'Set Direction and Vehicle'
-        context['button'] = 'Set'
-        return render(request, 'distance.html', context)
+        self.context = {}
+        self.context['form'] = DirectionForm()
+        self.context['title'] = 'Set Direction'
+        self.context['button'] = 'Set'
+        
+        vehicles = VehicleModel.objects.all()
+        self.context['vehicles'] = vehicles
+        return render(request, 'distance.html', self.context)
 
     def post(self, request):
-        pass
+        form = VehicleSearchFrom(request.POST)
+        if form.is_valid():
+            model = form.cleaned_data['search']
+            vehicles = VehicleModel.objects.filter(model__icontains=model)
+            self.context['vehicles'] = vehicles
+            return render(request, 'distance.html', self.context)
+        
 
 class SignUpView(CreateView):
     template_name = 'signup.html'
@@ -196,3 +209,22 @@ class DeleteProfileView(BaseLoginRequiredMixin, DeleteView):
         return context
         
         
+class RegisterVehicle(BaseLoginRequiredMixin, CreateView):
+    def get(self, request):
+        context = {}
+        context['form'] = VehicleRegistrationForm()
+        context['title'] = 'Register Vehicle'
+        context['button'] = 'Register'
+        return render(request, 'edit_profile.html', context)
+    
+    def post(self, request):
+        context = {}
+        form = VehicleRegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            vehicle = form.save(commit=False)
+            vehicle.driver = PersonModel.objects.get(user=request.user)
+            vehicle.save()
+            return redirect('profile')
+        else:
+            self.get(request)
+            return render(request, 'edit_profile.html', context)

@@ -29,20 +29,9 @@ class VehicleModel(models.Model):
     model = models.CharField(max_length=20)
     license_no = models.CharField(max_length=20)
     color = models.CharField(max_length=20)
-    
-class BikeModel(models.Model):
-    vehicle = models.ForeignKey(VehicleModel, on_delete=models.CASCADE)
     wheel = models.IntegerField()
-    avg_speed = models.IntegerField()
+    avg_speed = models.FloatField()
     capacity = models.IntegerField()
-    
-class CarModel(models.Model):
-    vehicle = models.ForeignKey(VehicleModel, on_delete=models.CASCADE)
-    wheel = models.IntegerField()
-    avg_speed = models.IntegerField()
-    capacity = models.IntegerField()
-    
-    
     
 class AddressModel(models.Model):
     person = models.ForeignKey(PersonModel, on_delete=models.CASCADE, related_name='address_owner')
