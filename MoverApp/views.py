@@ -45,6 +45,7 @@ class DistanceView(BaseLoginRequiredMixin, View):
     def get(self, request):
         self.context = {}
         self.context['form'] = DirectionForm()
+        self.context['search_form'] = VehicleSearchFrom()
         self.context['title'] = 'Set Direction'
         self.context['button'] = 'Set'
         return render(request, 'distance.html', self.context)
@@ -59,13 +60,18 @@ class DistanceView(BaseLoginRequiredMixin, View):
                 direction_matrix = gmaps.distance_matrix(origins=origin, destinations=destination, mode='transit')
             else:
                 direction_matrix = gmaps.distance_matrix(origins=origin, destinations=destination, mode='driving')
-            self.context['distance'] = direction_matrix['rows'][0]['elements'][0]['distance']['text']
-            self.context['duration'] = direction_matrix['rows'][0]['elements'][0]['duration']['text']
-            vehicles = VehicleModel.objects.all()
-            self.context['vehicles'] = vehicles
-            self.context['origin'] = origin
-            self.context['destination'] = destination
-            return render(request, 'driver_list.html', self.context)
+            
+            distance = direction_matrix['rows'][0]['elements'][0]['distance']['text']
+            duration = direction_matrix['rows'][0]['elements'][0]['duration']['text']
+            
+            request.session['redirected_from_direction'] = True
+            request.session['distance'] = distance
+            request.session['duration'] = duration
+            request.session['origin'] = origin
+            request.session['destination'] = destination
+            request.session.save()
+            
+            return redirect('driver_list')
         
 
 class SignUpView(CreateView):
@@ -255,3 +261,39 @@ class RequestsView(BaseLoginRequiredMixin, View):
     def get(self, request):
         self.context['type'] = PersonModel.objects.get(user=request.user).account_type
         return render(request, 'requests.html', self.context)
+    
+    
+class DriverListView(BaseLoginRequiredMixin, View):
+    context={}
+    def get(self, request):
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
+        self.context['vehicles'] = VehicleModel.objects.all()
+        self.context['distance'] = None
+        self.context['duration'] = None
+        self.context['origin'] = None
+        self.context['destination'] = None
+        
+        redirected = request.session.get('redirected_from_direction')
+        if redirected==True:
+            self.context['distance'] = request.session.get('distance')
+            self.context['duration'] = request.session.get('duration')
+            self.context['origin'] = request.session.get('origin')
+            self.context['destination'] = request.session.get('destination')
+            request.session['redirected_from_direction'] = False
+            request.session['distance'] = None 
+            request.session['duration'] = None
+            request.session['origin'] = None
+            request.session['destination'] = None
+            request.session.save()
+        
+        return render(request, 'driver_list.html', self.context)
+    
+    def post(self, request):
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
+        self.context['vehicles'] = VehicleModel.objects.all()
+        form = VehicleSearchFrom(request.POST)
+        if form.is_valid():
+            search = form.cleaned_data['search']
+            self.context['vehicles'] = VehicleModel.objects.filter(model__icontains=search)
+        return render(request, 'driver_list.html', self.context)
+        
