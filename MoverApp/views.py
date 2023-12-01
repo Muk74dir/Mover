@@ -33,6 +33,8 @@ class BaseLoginRequiredMixin(LoginRequiredMixin, View):
 
 class HomeView(BaseLoginRequiredMixin, View):
     def get(self, request):
+        if AddressModel.objects.filter(person__user=request.user).exists() == False:
+            return redirect('additional_info')
         context = {}
         context['API_KEY'] = API_KEY
         person = PersonModel.objects.get(user=request.user)
@@ -43,11 +45,14 @@ class HomeView(BaseLoginRequiredMixin, View):
 class DistanceView(BaseLoginRequiredMixin, View):
     context = {}
     def get(self, request):
+        if AddressModel.objects.filter(person__user=request.user).exists() == False:
+            return redirect('additional_info')
         self.context = {}
         self.context['form'] = DirectionForm()
         self.context['search_form'] = VehicleSearchFrom()
         self.context['title'] = 'Set Direction'
         self.context['button'] = 'Set'
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
         return render(request, 'distance.html', self.context)
 
     def post(self, request):
@@ -150,12 +155,15 @@ class LogOutView(BaseLoginRequiredMixin, LogoutView):
 
 class ProfileView(BaseLoginRequiredMixin, View):
     def get(self, request):
+        if AddressModel.objects.filter(person__user=request.user).exists() == False:
+            return redirect('additional_info')
         get_person = PersonModel.objects.get(user=request.user)
         get_person_address = AddressModel.objects.get(person=get_person)
         context = {}
         context['person'] = get_person
         context['address'] = get_person_address
         context['type'] = get_person.account_type
+        context['vehicles'] = VehicleModel.objects.filter(driver=get_person)
         return render(request, 'profile.html', context)
     
 class EditPersonView(BaseLoginRequiredMixin, UpdateView):
@@ -251,6 +259,7 @@ class AnotherProfileView(BaseLoginRequiredMixin, View):
     def get(self, request, pk):
         vehicle = VehicleModel.objects.get(pk=pk)
         self.context['person'] = PersonModel.objects.get(pk=vehicle.driver.pk)
+        self.context['vehicles'] = VehicleModel.objects.filter(driver=self.context['person'])
         self.context['address'] = AddressModel.objects.get(person=self.context['person'])
         self.context['type'] = PersonModel.objects.get(user=request.user).account_type
         return render(request, 'another_profile.html', self.context)
@@ -266,6 +275,8 @@ class RequestsView(BaseLoginRequiredMixin, View):
 class DriverListView(BaseLoginRequiredMixin, View):
     context={}
     def get(self, request):
+        if AddressModel.objects.filter(person__user=request.user).exists() == False:
+            return redirect('additional_info')
         self.context['type'] = PersonModel.objects.get(user=request.user).account_type
         self.context['vehicles'] = VehicleModel.objects.all()
         self.context['distance'] = None

@@ -15,7 +15,7 @@
                           <p class="form-control-static" id="origin">{{origin}}</p>
                       </div>
                       <div class="form-group">
-                          <label for="duration"><b>Duration:</b></label>
+                          <label for="duration"><b>Est. Duration:</b></label>
                           <p class="form-control-static" id="duration">{{duration}}</p>
                       </div>
                   </div>
@@ -25,7 +25,7 @@
                           <p class="form-control-static" id="destination">{{destination}}</p>
                       </div>
                       <div class="form-group">
-                          <label for="distance"><b>Distance:</b></label>
+                          <label for="distance"><b>Est. Distance:</b></label>
                           <p class="form-control-static" id="distance">{{distance}}</p>
                       </div>
                   </div>
@@ -56,8 +56,9 @@
             <tr style="text-align:center;">
               <th scope="col">Image</th>
               <th scope="col">Type</th>
-              <th scope="col">Brand</th>
               <th scope="col">Model</th>
+              <th scope="col">Capacity</th>
+              <th scope="col">Speed</th>
               <th scope="col">Driver</th>
               <th scope="col">Rating</th>
               <th scope="col">Status</th>
@@ -69,8 +70,9 @@
             <tr>
               <td scope="row"><img src="{{vehicle.image.url}}" alt="" style="width: 100px;"></td>
               <td scope="row">{{vehicle.type}}</td>
-              <td scope="row">{{vehicle.brand}}</td>
               <td scope="row">{{vehicle.model}}</td>
+              <td scope="row">{{vehicle.capacity}} Person</td>
+              <td scope="row">{{vehicle.avg_speed}} km/h</td>
               <td scope="row">{{vehicle.driver.first_name}} {{vehicle.driver.last_name}}</td>
               <td scope="row">{{vehicle.driver.rating}}</td>
               <td scope="row">{{vehicle.driver.status}}</td>
