@@ -37,6 +37,7 @@ class HomeView(BaseLoginRequiredMixin, View):
         context['API_KEY'] = API_KEY
         person = PersonModel.objects.get(user=request.user)
         context['person'] = person
+        context['type'] = person.account_type
         return render(request, 'base.html', context)
 
 class DistanceView(BaseLoginRequiredMixin, View):
@@ -46,9 +47,6 @@ class DistanceView(BaseLoginRequiredMixin, View):
         self.context['form'] = DirectionForm()
         self.context['title'] = 'Set Direction'
         self.context['button'] = 'Set'
-        
-        vehicles = VehicleModel.objects.all()
-        self.context['vehicles'] = vehicles
         return render(request, 'distance.html', self.context)
 
     def post(self, request):
@@ -63,6 +61,10 @@ class DistanceView(BaseLoginRequiredMixin, View):
                 direction_matrix = gmaps.distance_matrix(origins=origin, destinations=destination, mode='driving')
             self.context['distance'] = direction_matrix['rows'][0]['elements'][0]['distance']['text']
             self.context['duration'] = direction_matrix['rows'][0]['elements'][0]['duration']['text']
+            vehicles = VehicleModel.objects.all()
+            self.context['vehicles'] = vehicles
+            self.context['origin'] = origin
+            self.context['destination'] = destination
             return render(request, 'driver_list.html', self.context)
         
 
@@ -207,24 +209,26 @@ class DeleteProfileView(BaseLoginRequiredMixin, DeleteView):
     
     def get_context_data(self, **kwargs):
         context = {}
-        context['title'] = 'Are you sure you want to delete your profile?'
+        context['title'] = 'Are you sure you want to delete your Account?'
         context['button'] = 'Delete'
-        person = self.get_object()
+        return context
+    
+    def post(self, request):
         PersonModel.objects.get(user=self.request.user).delete()
         User.objects.get(pk=self.request.user.pk).delete()
-        return context
+        return redirect('logout')
         
         
 class RegisterVehicle(BaseLoginRequiredMixin, CreateView):
+    context={}
     def get(self, request):
-        context = {}
-        context['form'] = VehicleRegistrationForm()
-        context['title'] = 'Register Vehicle'
-        context['button'] = 'Register'
-        return render(request, 'edit_profile.html', context)
+        self.context['form'] = VehicleRegistrationForm()
+        self.context['title'] = 'Register Vehicle'
+        self.context['button'] = 'Register'
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
+        return render(request, 'edit_profile.html', self.context)
     
     def post(self, request):
-        context = {}
         form = VehicleRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             vehicle = form.save(commit=False)
@@ -233,4 +237,4 @@ class RegisterVehicle(BaseLoginRequiredMixin, CreateView):
             return redirect('profile')
         else:
             self.get(request)
-            return render(request, 'edit_profile.html', context)
+            return render(request, 'edit_profile.html', self.context)
