@@ -28,7 +28,8 @@
               </div>
               <div class="navbar-nav ml-auto">
                   {% if user.is_authenticated %}
-                  {% if person.account_type == "Driver" %}
+                  {% if type == "Driver" %}
+                  <a class="nav-link text-white" href=""> Requests </a>
                   <a class="nav-link text-white" href=" {% url "register_vehicle" %} ">Register</a>
                   {% else %}
                   <a class="nav-link text-white" href=" {% url "distance" %} ">Distance</a>

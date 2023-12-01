@@ -149,6 +149,7 @@ class ProfileView(BaseLoginRequiredMixin, View):
         context = {}
         context['person'] = get_person
         context['address'] = get_person_address
+        context['type'] = get_person.account_type
         return render(request, 'profile.html', context)
     
 class EditPersonView(BaseLoginRequiredMixin, UpdateView):
@@ -238,3 +239,19 @@ class RegisterVehicle(BaseLoginRequiredMixin, CreateView):
         else:
             self.get(request)
             return render(request, 'edit_profile.html', self.context)
+
+class AnotherProfileView(BaseLoginRequiredMixin, View):
+    context={}
+    def get(self, request, pk):
+        vehicle = VehicleModel.objects.get(pk=pk)
+        self.context['person'] = PersonModel.objects.get(pk=vehicle.driver.pk)
+        self.context['address'] = AddressModel.objects.get(person=self.context['person'])
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
+        return render(request, 'another_profile.html', self.context)
+
+
+class RequestsView(BaseLoginRequiredMixin, View):
+    context={}
+    def get(self, request):
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
+        return render(request, 'requests.html', self.context)

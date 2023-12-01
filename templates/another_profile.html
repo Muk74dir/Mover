@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}<title>{{title}}</title>{% endblock title %}
+{% block integration %}
+{% endblock integration %}
+
+{% block content %}
+<section style="background-color: #eee;">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img src="{{person.image.url}}" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                <h5 class="my-3">@{{person.username}} </h5>
+                <p class="text-muted mb-1">{{person.account_type}}</p>
+                <p class="text-muted mb-1"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><style>svg{fill:#0bc130}</style><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"/></svg> {{person.status}} </p>
+                <p class="text-muted mt-4 mb-0">Joined at {{person.date_created}}</p>
+                <p class="text-muted mb-4">Modified at {{person.date_modified}}</p>
+              <div class="d-flex justify-content-center mb-2">
+                <button type="button" class="btn btn-primary">Follow</button>
+                <button type="button" class="btn btn-outline-primary ms-1">Message</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{person.first_name}} {{person.last_name}}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{person.email}}</p>
+                </div>
+              </div>
+              <hr>  
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Phone</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"> {{person.phone}} </p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Date of Birth</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{person.dob}}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Address</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">Address : {{address.address_line}}</p>
+                  <p class="text-muted mb-0">City : {{address.city}}</p>
+                  <p class="text-muted mb-0">State : {{address.state}}</p>
+                  <p class="text-muted mb-0">Zip : {{address.zipcode}}</p>
+                  <p class="text-muted mb-0">Country : {{address.country}}</p>
+                </div>
+              </div>
+            </div>
+          </div>    
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content%}
+
+{% block scripts %}
+{% endblock scripts %}
