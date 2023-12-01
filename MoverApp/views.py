@@ -52,12 +52,18 @@ class DistanceView(BaseLoginRequiredMixin, View):
         return render(request, 'distance.html', self.context)
 
     def post(self, request):
-        form = VehicleSearchFrom(request.POST)
+        form = DirectionForm(request.POST)
         if form.is_valid():
-            model = form.cleaned_data['search']
-            vehicles = VehicleModel.objects.filter(model__icontains=model)
-            self.context['vehicles'] = vehicles
-            return render(request, 'distance.html', self.context)
+            origin = form.cleaned_data['origin']
+            destination = form.cleaned_data['destination']
+            mode = form.cleaned_data['travel_mode']
+            if mode == 'CAR':
+                direction_matrix = gmaps.distance_matrix(origins=origin, destinations=destination, mode='transit')
+            else:
+                direction_matrix = gmaps.distance_matrix(origins=origin, destinations=destination, mode='driving')
+            self.context['distance'] = direction_matrix['rows'][0]['elements'][0]['distance']['text']
+            self.context['duration'] = direction_matrix['rows'][0]['elements'][0]['duration']['text']
+            return render(request, 'driver_list.html', self.context)
         
 
 class SignUpView(CreateView):
