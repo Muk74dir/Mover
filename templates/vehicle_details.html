@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Vehicle Details</title>
+{% endblock title %}
+
+{% block integration %}
+    <!-- Add Bootstrap CSS link here -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy8bA/iRSNR9vskF2bWx4U1zryk5Bhp" crossorigin="anonymous">
+{% endblock integration %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <img src="{{ vehicle.image.url }}" alt="{{ vehicle.model }}" class="img-fluid mb-6">
+                <h1>{{ vehicle.model }}</h1>
+                <p class="lead">{{ vehicle.type }}</p>
+                <p><strong>License No:</strong> {{ vehicle.license_no }}</p>
+                <p><strong>Color:</strong> {{ vehicle.color }}</p>
+                <p><strong>Wheel:</strong> {{ vehicle.wheel }}</p>
+                <p><strong>Avg Speed:</strong> {{ vehicle.avg_speed }} km/h</p>
+                <p><strong>Capacity:</strong> {{ vehicle.capacity }}</p>
+                <p><strong>Owener:</strong> {{ owner }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+    <!-- Add Bootstrap JS, Popper.js, and jQuery links here -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-nnkz0L6zEhzoE9KQyoDE4+pg3s4s0uSbDxGlv2+83dX3nqRhB+ODl1VrwlqkDrJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy8bA/iRSNR9vskF2bWx4U1zryk5Bhp" crossorigin="anonymous"></script>
+{% endblock scripts %}

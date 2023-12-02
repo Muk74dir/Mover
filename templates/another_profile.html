@@ -80,24 +80,37 @@
                   <p class="text-muted mb-0">Country : {{address.country}}</p>
                 </div>
               </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Rating</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{person.rating}}</p>
+                </div>
+              </div>
             </div>
           </div>    
         </div>
       </div>
       <div class="container bg-white mt-5 p-3">
-          <div class="mt-5">
-            <h1 class="text-center">Vehicle's Owned</h1><hr>
-          </div>
-          {% for vehicle in vehicles %}
-          <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="{{vehicle.image.url}}" alt="Vehicle Image">
-            <div class="card-body">
-              <h5 class="card-title">{{vehicle.model}}</h5>
-              <p class="card-text"><b>license No : {{vehicle.license_no}}</b></p>
-              <a href="#" class="btn btn-info">Details</a>
+        <div class="mt-5">
+            <h1 class="text-center text-success">Vehicle's Owned</h1>
+        </div><hr>
+        <div class="d-flex flex-wrap justify-content-around">
+            {% for vehicle in vehicles %}
+            <div class="card mb-4 mt-3" style="width: 18rem;">
+                <img class="card-img-top" src="{{vehicle.image.url}}" alt="Vehicle Image">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{vehicle.model}}</h5>
+                    <p class="card-text text-center"><b>License No: {{vehicle.license_no}}</b></p>
+                    <div class="text-center">
+                      <a href=" {% url "vehicle_details" vehicle.id %} " class="btn btn-info">Details</a>
+                    </div>
+                </div>
             </div>
-          </div>
-          {% endfor %}
+            {% endfor %}
+        </div>
       </div>
     </div>
   </section>

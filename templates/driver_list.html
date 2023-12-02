@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load static %}
 
+{% block title %}
+<title>Ride</title>
+{% endblock title %}
+
+{% block integration %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock integration %}
+
+{% block content %}
 {% if duration %}
 <section class="container">
   <div class="row mt-5">
@@ -104,4 +112,8 @@
   {% endif %}
 </section>
 {% endblock content %}
+
+
+{% block scripts %}
+{% endblock scripts %}
 

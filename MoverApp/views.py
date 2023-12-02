@@ -307,4 +307,14 @@ class DriverListView(BaseLoginRequiredMixin, View):
             search = form.cleaned_data['search']
             self.context['vehicles'] = VehicleModel.objects.filter(model__icontains=search)
         return render(request, 'driver_list.html', self.context)
+    
+
+class VehicleDetailsView(BaseLoginRequiredMixin, View):
+    context={}
+    def get(self, request, pk):
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
+        vehicle = VehicleModel.objects.get(pk=pk)
+        self.context['vehicle'] = vehicle
+        self.context['owner'] = PersonModel.objects.get(pk=vehicle.driver.pk)
+        return render(request, 'vehicle_details.html', self.context)
         
