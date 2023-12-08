@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import HomeView, DistanceView, SignUpView, LogInView, LogOutView, AdditionalInfoView, ProfileView
 from .views import ChangePasswordView, EditPersonView, EditAddressView, DeleteProfileView, RegisterVehicle
-from .views import AnotherProfileView, DriverListView, VehicleDetailsView, TripDetailsView
+from .views import AnotherProfileView, DriverListView, VehicleDetailsView, TripDetailsView, BillingView
 
 
 urlpatterns = [
@@ -22,7 +22,6 @@ urlpatterns = [
     path('driver_list/', DriverListView.as_view(), name='driver_list'),
     path('vehicle_details/<int:pk>/view/', VehicleDetailsView.as_view(), name='vehicle_details'),
     path('trip_details/<int:pk>/view/', TripDetailsView.as_view(), name='trip_details'),
-    
-    
+    path('billing/<int:pk>/view/', BillingView.as_view(), name='billing'),
     
 ]      

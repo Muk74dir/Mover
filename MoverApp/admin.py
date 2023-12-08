@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PersonModel, AddressModel, VehicleModel, TripRequestModel, TripModel
+from .models import PersonModel, AddressModel, VehicleModel, TripModel
 
 @admin.register(PersonModel)
 class PersonAdmin(admin.ModelAdmin):

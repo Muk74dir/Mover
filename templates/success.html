@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+
+{% block title %}
+<title>Log in</title>
+{% endblock title %}
+
+{% block integration %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock integration %}
+
+
+{% block content%}
+{% if Error %}
+<h2 class="text-danger text-center mt-5"> {{Error}}</h2>
+{% endif %}
+<section>
+
+</section>
+{% endblock content%}
+{% block script %}
+{% endblock script %}

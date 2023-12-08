@@ -1,5 +1,6 @@
 from decouple import config
 API_KEY = config('API_KEY')
+STRIPE_API_KEY = config('STRIPE_API_KEY')
 
 ACCOUNT_TYPE = (
     ('Passenger', 'Passenger'),

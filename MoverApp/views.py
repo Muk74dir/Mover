@@ -1,5 +1,5 @@
 from typing import Any, Dict, Optional
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import View, CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
@@ -8,14 +8,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import SignUpForm, InfoForm, AddressInfoFormSet, PersonModelForm, AddressModelForm, DirectionForm
 from .forms import VehicleRegistrationForm, VehicleSearchFrom
 from django.contrib.auth import get_user_model
-from .models import PersonModel, AddressModel, VehicleModel
+from django.views.decorators.csrf import csrf_exempt
+from .models import PersonModel, AddressModel, VehicleModel, TripModel
 from django.contrib.auth.models import User
+import googlemaps, stripe, requests
 from django.db import transaction
-from .constants import API_KEY
+from .constants import API_KEY, STRIPE_API_KEY
 import datetime as dt
-import googlemaps
-import requests
-
+from .ssl import sslcommerz_payment_gateway
 
 gmaps = googlemaps.Client(key=API_KEY)
 
@@ -348,6 +348,39 @@ class TripDetailsView(BaseLoginRequiredMixin, View):
         self.context['remaining_time'] = remaining_time
         self.context['remaining_distance'] = remaining_distance
         
-        
+        TripModel.objects.create(
+            pk=request.session.get('trip_id'),
+            passenger=self.context['passenger'],
+            driver=self.context['owner'],
+            vehicle=self.context['vehicle'],
+            start_from=self.context['origin'],
+            end_to=self.context['destination'],
+            distance=self.context['distance'],
+            duration=self.context['duration'],
+            fare=int(self.context['distance'].split()[0])*100,
+            status=True,
+            rating=None,
+        )
         return render(request, 'trip_details.html', self.context)
+    
+    
+class BillingView(BaseLoginRequiredMixin, View):
+    context={}
+    def get(self, request, pk):
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
+        self.context['person'] = PersonModel.objects.get(user=request.user)
+        self.context['invoice_no'] = f"000{pk}"
+        self.context['date'] = dt.datetime.today().strftime('%B %d, %Y')
+        user = PersonModel.objects.get(user=request.user)
+        vehicle = VehicleModel.objects.get(pk=pk)
+        driver = PersonModel.objects.get(pk=vehicle.driver.pk)
+        self.context['fare'] = TripModel.objects.get(pk=pk).fare
+        self.context['vehicle'] = vehicle
+        return render(request, 'billing.html', self.context)
+    
+    def post(self, request, pk):
+        trip_instance = TripModel.objects.get(pk=pk)
+        grand_total = trip_instance.fare
+        user = PersonModel.objects.get(user=request.user)
         
+        return redirect(sslcommerz_payment_gateway(request, pk, user.pk, grand_total))

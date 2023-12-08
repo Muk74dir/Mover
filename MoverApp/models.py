@@ -41,12 +41,6 @@ class AddressModel(models.Model):
     country = models.CharField(max_length=30)
     zipcode = models.CharField(max_length=10)
 
-class TripRequestModel(models.Model):
-    passenger = models.ForeignKey(PersonModel, on_delete=models.CASCADE, related_name='requester')
-    driver = models.ForeignKey(PersonModel, on_delete=models.CASCADE, related_name='responder')
-    status = models.BooleanField(default=False)
-
-
 class TripModel(models.Model):
     passenger = models.ForeignKey(PersonModel, on_delete=models.CASCADE, related_name='passenger')
     driver = models.ForeignKey(PersonModel, on_delete=models.CASCADE, related_name='driver')
@@ -59,11 +53,20 @@ class TripModel(models.Model):
     fare = models.FloatField()
     
     status = models.BooleanField(default=False)
-    rating = models.FloatField()
+    rating = models.FloatField(blank=True, null=True, default=None)
     comments = models.CharField(max_length=200)
     
     initiated = models.DateTimeField(auto_now_add=True)
     finished = models.DateTimeField(auto_now=True)
+    
+
+class PaymentGatewaySettingsModel(models.Model):
+    store_id = models.CharField(max_length=100, blank=True, null=True)
+    store_pass = models.CharField(max_length=100, blank=True, null=True)
+    
+    
+    def __str__(self):
+        return f"Store ID :--> {self.store_id}"
     
 
 class CouponModel(models.Model):

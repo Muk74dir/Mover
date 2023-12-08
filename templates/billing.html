@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+<title>Billing Page</title>
+{% endblock title %}
+
+{% block integration %}
+{% endblock integration %}
+
+
+{% block content %}
+<section class="container mt-5" style="height: auto; width: 600px;">
+    <div class="card">
+        <div class="card-body mx-4">
+          <div class="container">
+            <p class="my-5 mx-5" style="font-size: 30px;">Billing Information</p>
+            <div class="row">
+              <ul class="list-unstyled">
+                <li class="text-black">{{person.first_name}} {{person.last_name}}</li>
+                <li class="text-muted mt-1"><span class="text-black">Invoice</span> #{{invoice_no}}</li>
+                <li class="text-black mt-1">{{date}}</li>
+              </ul>
+              <hr>
+              <div class="col-xl-10">
+                <p>Base Fare</p>
+              </div>
+              <div class="col-xl-2">
+                <p class="float-end">$100.00
+                </p>
+              </div>
+              <hr>
+            </div>
+            <div class="row">
+              <div class="col-xl-10">
+                <p>Per km</p>
+              </div>
+              <div class="col-xl-2">
+                <p class="float-end">$20.00
+                </p>
+              </div>
+              <hr>
+            </div>
+            <div class="row">
+              <div class="col-xl-10">
+                <p>Tax</p>
+              </div>
+              <div class="col-xl-2">
+                <p class="float-end">$10.00
+                </p>
+              </div>
+              <hr style="border: 2px solid black;">
+            </div>
+            <div class="row text-black">
+      
+              <div class="col-xl-12">
+                <p class="float-end fw-bold">Total: ${{fare}}
+                </p>
+              </div>
+              <hr style="border: 2px solid black;">
+            </div>
+            <div class="text-center" style="margin-top: 90px;">
+              
+            </div>
+          </div>
+          <form method="POST">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center">
+              <button class="btn btn-success btn" type="submit" id="checkout-button">Checkout</button>
+            </div>
+          </form>
+        </div>
+      </div>
+</section>
+{% endblock content %}

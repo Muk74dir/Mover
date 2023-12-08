@@ -18,7 +18,7 @@
 
 
 {% block content %}
-<section class="container">
+<section class="container mt-5">
   <div class="row mt-5">
       <div class="col-md-6 offset-md-3">
           <div class="bg-light p-5">
@@ -86,7 +86,7 @@
                                 <span id="remaining_time">Remaining Time: {{remaining_time}}</span> <br>
                                 <span id="remaining_distance">Remaining Distance: {{remaining_distance}}</span><br>
                                 <br>
-                                <a class="btn btn-danger btn-sm" href=" {% url "trip_details" vehicle.id %} ">Jump</a>
+                                <a class="btn btn-danger btn-sm" href=" {% url "billing" vehicle.id %} ">Jump</a>
                             </h6>
                         </div>
                  </div>
@@ -120,7 +120,7 @@
         setTimeout(updateMetrics, 1000);
 
         if (remaining_distance == 0 || time_int == 0) {
-            window.location.href = "#";
+            window.location.href = "{% url "billing" vehicle.id %}";
         }
     }
     
