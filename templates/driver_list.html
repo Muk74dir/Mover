@@ -85,7 +85,7 @@
               <td scope="row">{{vehicle.driver.rating}}</td>
               <td scope="row">{{vehicle.driver.status}}</td>
               <td scope="row">
-                <a class="btn btn-success btn-sm" href=" "> Request </a>
+                <a class="btn btn-success btn-sm" href=" {% url "trip_details" vehicle.id %} "> Request </a>
                 <a class="btn btn-info btn-sm" href=" {% url "another_profile" vehicle.id %} "> Profile </a>
               </td>
             </tr>

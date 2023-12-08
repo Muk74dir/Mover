@@ -11,10 +11,11 @@ from django.contrib.auth import get_user_model
 from .models import PersonModel, AddressModel, VehicleModel
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.core.files import File
 from .constants import API_KEY
+import datetime as dt
 import googlemaps
 import requests
+
 
 gmaps = googlemaps.Client(key=API_KEY)
 
@@ -291,10 +292,6 @@ class DriverListView(BaseLoginRequiredMixin, View):
             self.context['origin'] = request.session.get('origin')
             self.context['destination'] = request.session.get('destination')
             request.session['redirected_from_direction'] = False
-            request.session['distance'] = None 
-            request.session['duration'] = None
-            request.session['origin'] = None
-            request.session['destination'] = None
             request.session.save()
         
         return render(request, 'driver_list.html', self.context)
@@ -317,4 +314,28 @@ class VehicleDetailsView(BaseLoginRequiredMixin, View):
         self.context['vehicle'] = vehicle
         self.context['owner'] = PersonModel.objects.get(pk=vehicle.driver.pk)
         return render(request, 'vehicle_details.html', self.context)
+        
+
+class TripDetailsView(BaseLoginRequiredMixin, View):
+    context={}
+    
+    def get(self, request, pk):
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
+        self.context['vehicle'] = VehicleModel.objects.get(pk=pk)
+        self.context['owner'] = PersonModel.objects.get(pk=self.context['vehicle'].driver.pk)
+        self.context['passenger'] = PersonModel.objects.get(user=request.user)
+        
+        self.context['distance'] = request.session.get('distance')
+        self.context['duration'] = request.session.get('duration')
+        self.context['origin'] = request.session.get('origin')
+        self.context['destination'] = request.session.get('destination')
+        
+        self.context['start_time'] = dt.datetime.now()
+        self.context['end_time'] = dt.datetime.now() + dt.timedelta(
+            hours=int(self.context['duration'].split()[0]),
+            minutes=int(self.context['duration'].split()[2])
+        )
+        
+        
+        return render(request, 'trip_details.html', self.context)
         

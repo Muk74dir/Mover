@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="container">
+  <div class="row mt-5">
+      <div class="col-md-6 offset-md-3">
+          <div class="bg-light p-5">
+              <h3 class="text-center">Trip Details</h3><hr>
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label for="origin"><b>Origin:</b></label>
+                          <p class="form-control-static" id="origin">{{origin}}</p>
+                      </div>
+                      <div class="form-group">
+                          <label for="duration"><b>Est. Duration:</b></label>
+                          <p class="form-control-static" id="duration">{{duration}}</p>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label for="destination"><b>Destination</b></label>
+                          <p class="form-control-static" id="destination">{{destination}}</p>
+                      </div>
+                      <div class="form-group">
+                          <label for="distance"><b>Est. Distance:</b></label>
+                          <p class="form-control-static" id="distance">{{distance}}</p>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Passenger"><b>Passenger Info:</b></label>
+                            <p class="form-control-static" id="Passenger">
+                                <img src="{{passenger.image.url}}" alt="" style="height: 100px; width: auto;"><br>
+                                Name: {{passenger.first_name}} {{passenger.last_name}}<br>
+                                Phone: {{passenger.phone}}<br>
+                                <br>
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="Vehicle"><b>Vehicle Info: </b></label>
+                            <p class="form-control-static" id="Vehicle">
+                                <img src="{{vehicle.image.url}}" alt="" style="height: 100px; width: auto;"><br>
+                                Model: {{vehicle.model}}<br>
+                                License: {{vehicle.license_no}}<br>
+                                Color: {{vehicle.color}}<br>
+                                Speed: {{vehicle.avg_speed}} <br>
+                                Capacity: {{vehicle.capacity}} <br>
+                            </p>
+                        </div>
+                  </div>
+                  <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Driver"><b>Driver Info:</b></label>
+                            <p class="form-control-static" id="Driver">
+                                <img src="{{owner.image.url}}" alt="" style="height: 100px; width: auto;"><br>
+                                Name: {{owner.first_name}} {{owner.last_name}}<br>
+                                Phone: {{owner.phone}}<br>
+                                Rating: {{owner.rating}}<br>
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="Other"><b>Other Info:</b></label>
+                            <p class="form-control-static" id="Other">
+                                Start Time: {{start_time}}<br>
+                                End Time: {{end_time}} <br>
+                            </p>
+                        </div>
+                 </div>
+              </div>
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+{% endblock content %}
