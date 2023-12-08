@@ -331,10 +331,22 @@ class TripDetailsView(BaseLoginRequiredMixin, View):
         self.context['destination'] = request.session.get('destination')
         
         self.context['start_time'] = dt.datetime.now()
-        self.context['end_time'] = dt.datetime.now() + dt.timedelta(
-            hours=int(self.context['duration'].split()[0]),
-            minutes=int(self.context['duration'].split()[2])
-        )
+        
+        if self.context['duration'].split()[1] == 'mins':
+            self.context['end_time'] = self.context['start_time'] + dt.timedelta(
+                minutes=int(self.context['duration'].split()[0])
+            )
+        else:
+            self.context['end_time'] = dt.datetime.now() + dt.timedelta(
+                hours=int(self.context['duration'].split()[0]),
+                minutes=int(self.context['duration'].split()[2])
+            )
+        
+        remaining_time = self.context['end_time'] - self.context['start_time']
+        remaining_distance = self.context['distance'].split()[0]
+        
+        self.context['remaining_time'] = remaining_time
+        self.context['remaining_distance'] = remaining_distance
         
         
         return render(request, 'trip_details.html', self.context)

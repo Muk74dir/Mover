@@ -1,5 +1,21 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}
+<title>Trip Details</title>
+{% endblock title %}
+
+{% block style %}
+<style>
+    .form-control-static {
+        font-size: 1.2em;
+    }
+</style>
+{% endblock style %}
+
+
+{% block integration %}
+{% endblock integration %}
+
 
 {% block content %}
 <section class="container">
@@ -61,11 +77,15 @@
                             </p>
                         </div>
                         <div class="form-group">
-                            <label for="Other"><b>Other Info:</b></label>
-                            <p class="form-control-static" id="Other">
+                            <label for="Other"><b>Metrics Info:</b></label>
+                            <h6 class="form-control-static" id="Other">
+                                <br>
                                 Start Time: {{start_time}}<br>
                                 End Time: {{end_time}} <br>
-                            </p>
+                                <br>
+                                <span id="remaining_time">Remaining Time: {{remaining_time}}</span> <br>
+                                <span id="remaining_distance">Remaining Distance: {{remaining_distance}}</span><br>
+                            </h6>
                         </div>
                  </div>
               </div>
@@ -75,4 +95,40 @@
       </div>
   </div>
 </section>
+<script>
+    function updateMetrics() {
+        var remainingDistance = document.getElementById("remaining_distance");
+        var remainingTime = document.getElementById("remaining_time");
+
+        var distance_int = parseFloat(remainingDistance.innerHTML.split(" ")[2]);
+        var timeComponents = remainingTime.innerHTML.split(" ")[2].split(":");
+        var time_int = parseInt(timeComponents[0]) * 3600 + parseInt(timeComponents[1]) * 60 + parseInt(timeComponents[2]);
+
+        time_int -= 1;
+        var hours = Math.floor(time_int / 3600);
+        var minutes = Math.floor((time_int - hours * 3600) / 60);
+        var seconds = time_int - hours * 3600 - minutes * 60;
+
+        
+        distance_int -= 0.5;
+        
+        remainingTime.innerHTML = "Remaining Time: " + hours + ":" + minutes + ":" + seconds;
+        remainingDistance.innerHTML = "Remaining Distance: " + distance_int.toFixed(2) + " km";
+
+        setTimeout(updateMetrics, 1000);
+
+        if (remaining_distance == 0 || time_int == 0) {
+            window.location.href = "#";
+        }
+    }
+    
+    updateMetrics();
+
+</script>
 {% endblock content %}
+
+{% block script %}
+
+
+{% endblock script %}
+    
