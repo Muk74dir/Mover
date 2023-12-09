@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PersonModel, AddressModel, VehicleModel, TripModel
+from .models import PersonModel, AddressModel, VehicleModel, TripModel, PaymentGatewaySettingsModel
 
 @admin.register(PersonModel)
 class PersonAdmin(admin.ModelAdmin):
@@ -24,3 +24,15 @@ class VehicleAdmin(admin.ModelAdmin):
     
     def __str__(self):
         return self.driver.username
+    
+@admin.register(TripModel)
+class TripAdmin(admin.ModelAdmin):
+    def __str__(self):
+        return f"{self.passenger.username} --> {self.driver.username}"
+    
+    
+@admin.register(PaymentGatewaySettingsModel)
+class PaymentGatewaySettingsAdmin(admin.ModelAdmin):
+    
+    def __str__(self):
+        return self.person.username

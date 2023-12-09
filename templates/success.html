@@ -1,23 +1,46 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags%}
+{% load crispy_forms_tags %}
 
 {% block title %}
-<title>Log in</title>
+    <title>Log in</title>
 {% endblock title %}
 
 {% block integration %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock integration %}
 
+{% block content %}
+    {% if Error %}
+        <h2 class="text-danger text-center mt-5">{{ Error }}</h2>
+    {% else %}
+        <div class="container mt-5">
+            <h2 class="text-success text-center">Payment Successful!</h2>
+            <!-- Add content related to the payment success here -->
 
-{% block content%}
-{% if Error %}
-<h2 class="text-danger text-center mt-5"> {{Error}}</h2>
-{% endif %}
-<section>
+            <div class="mt-4">
+                <h4>Give us your feedback:</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <!-- Add your feedback form fields here -->
+                    <div class="form-group">
+                        <label for="driver_rating">Rate the driver:</label>
+                        <select name="driver_rating" id="driver_rating" class="form-control">
+                            <option value="1">1 - Poor</option>
+                            <option value="2">2 - Fair</option>
+                            <option value="3">3 - Average</option>
+                            <option value="4">4 - Good</option>
+                            <option value="5">5 - Excellent</option>
+                        </select>
+                    </div>
+                    <!-- Add other form fields as needed -->
 
-</section>
-{% endblock content%}
+                    <button type="submit" class="btn btn-primary">Rate</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content %}
+
 {% block script %}
 {% endblock script %}

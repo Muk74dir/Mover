@@ -349,7 +349,7 @@ class TripDetailsView(BaseLoginRequiredMixin, View):
         self.context['remaining_distance'] = remaining_distance
         
         TripModel.objects.create(
-            pk=request.session.get('trip_id'),
+            pk=pk,
             passenger=self.context['passenger'],
             driver=self.context['owner'],
             vehicle=self.context['vehicle'],
@@ -357,7 +357,7 @@ class TripDetailsView(BaseLoginRequiredMixin, View):
             end_to=self.context['destination'],
             distance=self.context['distance'],
             duration=self.context['duration'],
-            fare=int(self.context['distance'].split()[0])*100,
+            fare=(int(self.context['distance'].split()[0]) * 5 ) + 110,
             status=True,
             rating=None,
         )
@@ -384,3 +384,21 @@ class BillingView(BaseLoginRequiredMixin, View):
         user = PersonModel.objects.get(user=request.user)
         
         return redirect(sslcommerz_payment_gateway(request, pk, user.pk, grand_total))
+
+@csrf_exempt
+def success(request):
+    context = {}
+    context['type'] = 'passenger'
+    return render(request, 'success.html', context)
+
+@csrf_exempt
+def faild(request):
+    context = {}
+    context['type'] = 'passenger'
+    return render(request, 'failed.html', context)
+
+@csrf_exempt
+def cancelled(request):
+    context = {}
+    context['type'] = 'passenger'
+    return render(request, 'cancelled.html', context)

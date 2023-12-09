@@ -1,12 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Checkout canceled</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <section>
-    <p>Forgot to add something to your cart? Shop around then come back to pay!</p>
-  </section>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<title>Payment Cancelled</title>
+{% endblock title %}
+
+{% block integration %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock integration %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-danger text-center">Payment Cancelled</h2>
+
+        <p class="text-center">Your payment has been cancelled. If you have any questions, please contact support.</p>
+    </div>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

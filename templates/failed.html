@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    <title>Payment Failure</title>
+{% endblock title %}
+
+{% block integration %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Include any additional stylesheets or scripts you need -->
+{% endblock integration %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-danger text-center">Payment Failed</h2>
+        <!-- Add content related to the payment failure here -->
+
+        <p class="text-center">Unfortunately, your payment could not be processed. Please try again later or contact support for assistance.</p>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <!-- Include any additional scripts you need for this page -->
+{% endblock script %}
