@@ -57,7 +57,7 @@ class TripModel(models.Model):
     comments = models.CharField(max_length=200)
     
     initiated = models.DateTimeField(auto_now_add=True)
-    finished = models.DateTimeField(auto_now=True)
+    finished = models.DateTimeField()
     
 
 class PaymentGatewaySettingsModel(models.Model):

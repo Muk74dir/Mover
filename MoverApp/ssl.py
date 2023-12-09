@@ -5,10 +5,10 @@ from sslcommerz_lib import SSLCOMMERZ
 from .models import PaymentGatewaySettingsModel
 
 def unique_transaction_id_generator(size=10, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+    return ''.join(random.choice(chars) for _ in range(size))   
 
 @login_required 
-def sslcommerz_payment_gateway(request, id, user_id, grand_total):
+def sslcommerz_payment_gateway(request, id, user, grand_total):
     gateway_auth_details = PaymentGatewaySettingsModel.objects.all().first()
     
     settings = {'store_id': gateway_auth_details.store_id,
@@ -41,7 +41,7 @@ def sslcommerz_payment_gateway(request, id, user_id, grand_total):
 
     # OPTIONAL PARAMETERS
     post_body['value_a'] = id
-    post_body['value_b'] = user_id
+    post_body['value_b'] = user
     post_body['value_c'] = 'email'
 
     response = sslcommez.createSession(post_body)

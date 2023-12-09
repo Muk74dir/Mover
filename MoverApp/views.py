@@ -358,8 +358,7 @@ class TripDetailsView(BaseLoginRequiredMixin, View):
             distance=self.context['distance'],
             duration=self.context['duration'],
             fare=(int(self.context['distance'].split()[0]) * 5 ) + 110,
-            status=True,
-            rating=None,
+            finished=self.context['end_time']
         )
         return render(request, 'trip_details.html', self.context)
     
@@ -383,22 +382,26 @@ class BillingView(BaseLoginRequiredMixin, View):
         grand_total = trip_instance.fare
         user = PersonModel.objects.get(user=request.user)
         
-        return redirect(sslcommerz_payment_gateway(request, pk, user.pk, grand_total))
+        return redirect(sslcommerz_payment_gateway(request, pk, user, grand_total))
 
 @csrf_exempt
 def success(request):
-    context = {}
-    context['type'] = 'passenger'
-    return render(request, 'success.html', context)
-
+    return render(request, 'success.html')
+    
 @csrf_exempt
 def faild(request):
-    context = {}
-    context['type'] = 'passenger'
-    return render(request, 'failed.html', context)
+    return render(request, 'failed.html')
 
 @csrf_exempt
 def cancelled(request):
-    context = {}
-    context['type'] = 'passenger'
-    return render(request, 'cancelled.html', context)
+    return render(request, 'cancelled.html')
+
+
+class TravelHistoryView(BaseLoginRequiredMixin, View):
+    context={}
+    def get(self, request):
+        self.context['type'] = PersonModel.objects.get(user=request.user).account_type
+        self.context['trips'] = TripModel.objects.filter(passenger__user=request.user)
+        return render(request, 'travel_history.html', self.context)
+
+

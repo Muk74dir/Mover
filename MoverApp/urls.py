@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import HomeView, DistanceView, SignUpView, LogInView, LogOutView, AdditionalInfoView, ProfileView
 from .views import ChangePasswordView, EditPersonView, EditAddressView, DeleteProfileView, RegisterVehicle
-from .views import AnotherProfileView, DriverListView, VehicleDetailsView, TripDetailsView, BillingView
+from .views import AnotherProfileView, DriverListView, VehicleDetailsView, TripDetailsView, BillingView, TravelHistoryView
 from .views import success, cancelled, faild
 
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('billing/<int:pk>/view/', BillingView.as_view(), name='billing'),
     path('payment/success/', success, name='payment_success'),
     path('payment/cancelled/', cancelled, name='payment_cancelled'),
-    path('payment/failed/', faild, name='payment_failed')
+    path('payment/failed/', faild, name='payment_failed'),
+    path('travel_history/', TravelHistoryView.as_view(), name='travel_history'),
     
 ]      

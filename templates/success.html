@@ -22,7 +22,6 @@
                 <h4>Give us your feedback:</h4>
                 <form method="post">
                     {% csrf_token %}
-                    <!-- Add your feedback form fields here -->
                     <div class="form-group">
                         <label for="driver_rating">Rate the driver:</label>
                         <select name="driver_rating" id="driver_rating" class="form-control">
@@ -34,7 +33,6 @@
                         </select>
                     </div>
                     <!-- Add other form fields as needed -->
-
                     <button type="submit" class="btn btn-primary">Rate</button>
                 </form>
             </div>
